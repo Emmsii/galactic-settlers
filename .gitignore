@@ -60,4 +60,5 @@ typings/
 # next.js build output
 .next
 
-config/database.js
+config/database.json
+config/mysql.js

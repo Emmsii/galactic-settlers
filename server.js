@@ -13,7 +13,7 @@ var session = require('express-session');
 var MySqlStore = require('express-mysql-session')(session);
 
 var models = require('./app/models');
-var dbConfig = require('./config/database.js');
+var dbConfig = require('./config/mysql.js');
 var sessionStore = new MySqlStore(dbConfig);
 
 app.use(morgan('dev'));
