@@ -24,7 +24,8 @@ module.exports = function(sequelize, Sequelize){
       type: Sequelize.STRING(255),
       allowNull: false,
     }
-  }, {
+  },
+  {
     charset: 'utf8',
     collate: 'utf8_unicode_ci'
   });
