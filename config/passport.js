@@ -1,4 +1,5 @@
 var LocalStrategy = require('passport-local').Strategy;
+var CustomStrategy = require('passport-custom').Strategy;
 var bcrypt = require('bcrypt');
 
 const saltRounds = 10;
@@ -7,7 +8,7 @@ module.exports = function(passport, userModel) {
 
   var User = userModel;
 
-  console.log(User);
+  console.log('usermodel: ' + User);
 
   passport.serializeUser(function(user, done) {
     console.log('serialize');
@@ -22,13 +23,41 @@ module.exports = function(passport, userModel) {
     });
   });
 
+  passport.use('username-creation', new CustomStrategy(
+    function(req, done){
+      console.log('session user: ' + req.user.id);
+      User.findOne({
+        where:{
+          username: req.body.username
+        }
+      }).then(function(user){
+        if(user) return done(null, false, req.flash('usernameMessage', 'That username has been taken.'));
+        else{
+          var updatedUser = User.update({
+            username: req.body.username
+          },{
+            where:{
+              id: req.user.id
+            },
+            returning: true,
+            plain: true
+          }).then(function(result){
+              User.findById(req.user.id).then(function(user){
+                done(null, user);
+              });
+          });
+        }
+      });
+    }
+  ));
+
   passport.use('local-signup', new LocalStrategy({
       usernameField: 'email',
       passwordField: 'password',
       passReqToCallback: true
     },
     function(req, email, password, done) {
-
+      console.log('finding one: ' + email + ', ' + password);
       User.findOne({
         where: {
           email: email
@@ -40,7 +69,6 @@ module.exports = function(passport, userModel) {
           var hash = bcrypt.hashSync(password, salt);
 
           var data = {
-            username: 'Bill',
             email: email,
             password: hash,
             salt: salt
@@ -77,6 +105,11 @@ module.exports = function(passport, userModel) {
         }
 
         var userData = user.get();
+
+        if(!userData.username){
+          // todo; REDIRECT TO USERNAME SELECT
+        }
+
         return done(null, userData);
       }).catch(function(err){
         console.log(err);
