@@ -3,7 +3,8 @@
 var fs = require('fs');
 var path = require('path');
 var Sequelize = require('sequelize');
-var env = process.env.NODE_ENV || 'development';
+// var env = process.env.NODE_ENV || 'development';
+var env = 'development';
 var config = require(path.join(__dirname, '..', '..', 'config', 'database.json'))[env];
 var sequelize = new Sequelize(config.database, config.username, config.password, config);
 var db = {};
@@ -17,6 +18,12 @@ fs
     var model = sequelize.import(path.join(__dirname, file));
     db[model.name] = model;
   });
+
+// var db = {
+//   User: sequelize.import('./users'),
+//   System: sequelize.import('./systems'),
+//   Planet: sequelize.import('./planets'),
+// }
 
 Object.keys(db).forEach(function(modelName){
   if('associate' in db[modelName]){

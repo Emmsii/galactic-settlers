@@ -1,9 +1,13 @@
 module.exports = function(sequelize, Sequelize) {
-  var Planet = sequelize.define('Planet', {
+  var Galaxy = sequelize.define('Galaxy', {
     id: {
       type: Sequelize.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
+      allowNull: false
+    },
+    max_players: {
+      type: Sequelize.SMALLINT.UNSIGNED,
       allowNull: false
     }
   }, {
@@ -12,14 +16,5 @@ module.exports = function(sequelize, Sequelize) {
     underscores: true
   });
 
-  Planet.associate = (models) => {
-    Planet.hasMany(models.Building, {
-      foreignKey: {
-        name: "planet_id",
-        allowNull: false
-      }
-    });
-  };
-
-  return Planet;
+  return Galaxy;
 }

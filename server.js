@@ -57,25 +57,25 @@ models.sequelize.sync().then(function(){
 require('./app/routes.js')(app, passport);
 require('./config/passport')(passport, models.users);
 
-models.systems.belongsTo(models.users, {
-  foreignKey: {
-    name: 'user_id',
-    foreignKeyContraint: false,
-  }
-});
-models.systems.hasMany(models.planets, {
-  foreignKey: {
-    name: 'system_id',
-    foreignKeyContraint: false,
-    allowNull: false
-  }
-});
-models.planets.belongsTo(models.users, {
-  foreignKey: {
-    name: 'user_id',
-    foreignKeyContraint: false,
-  }
-});
+// models.systems.belongsTo(models.users, {
+//   foreignKey: {
+//     name: 'user_id',
+//     foreignKeyContraint: false,
+//   }
+// });
+// models.systems.hasMany(models.planets, {
+//   foreignKey: {
+//     name: 'system_id',
+//     foreignKeyContraint: false,
+//     allowNull: false
+//   }
+// });
+// models.planets.belongsTo(models.users, {
+//   foreignKey: {
+//     name: 'user_id',
+//     foreignKeyContraint: false,
+//   }
+// });
 
 app.listen(port);
 console.log('Listening on port ' + port);
