@@ -1,14 +1,12 @@
 var LocalStrategy = require('passport-local').Strategy;
-var CustomStrategy = require('passport-custom').Strategy;
+// var CustomStrategy = require('passport-custom').Strategy;
 var bcrypt = require('bcrypt');
 
-const saltRounds = 10;
+const saltRounds = 12;
 
 module.exports = function(passport, userModel) {
 
   var User = userModel;
-
-  console.log('usermodel: ' + User);
 
   passport.serializeUser(function(user, done) {
     console.log('serialize');
@@ -23,33 +21,33 @@ module.exports = function(passport, userModel) {
     });
   });
 
-  passport.use('username-creation', new CustomStrategy(
-    function(req, done){
-      console.log('session user: ' + req.user.id);
-      User.findOne({
-        where:{
-          username: req.body.username
-        }
-      }).then(function(user){
-        if(user) return done(null, false, req.flash('usernameMessage', 'That username has been taken.'));
-        else{
-          var updatedUser = User.update({
-            username: req.body.username
-          },{
-            where:{
-              id: req.user.id
-            },
-            returning: true,
-            plain: true
-          }).then(function(result){
-              User.findById(req.user.id).then(function(user){
-                done(null, user);
-              });
-          });
-        }
-      });
-    }
-  ));
+  // passport.use('username-creation', new CustomStrategy(
+  //   function(req, done){
+  //     console.log('session user: ' + req.user.id);
+  //     User.findOne({
+  //       where:{
+  //         username: req.body.username
+  //       }
+  //     }).then(function(user){
+  //       if(user) return done(null, false, req.flash('usernameMessage', 'That username has been taken.'));
+  //       else{
+  //         var updatedUser = User.update({
+  //           username: req.body.username
+  //         },{
+  //           where:{
+  //             id: req.user.id
+  //           },
+  //           returning: true,
+  //           plain: true
+  //         }).then(function(result){
+  //             User.findById(req.user.id).then(function(user){
+  //               done(null, user);
+  //             });
+  //         });
+  //       }
+  //     });
+  //   }
+  // ));
 
   passport.use('local-signup', new LocalStrategy({
       usernameField: 'email',
@@ -105,10 +103,6 @@ module.exports = function(passport, userModel) {
         }
 
         var userData = user.get();
-
-        if(!userData.username){
-          // todo; REDIRECT TO USERNAME SELECT
-        }
 
         return done(null, userData);
       }).catch(function(err){

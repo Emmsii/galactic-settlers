@@ -21,21 +21,9 @@ module.exports = function(app, passport) {
   });
 
   app.post('/signup', passport.authenticate('local-signup', {
-      successRedirect : '/username',
+      successRedirect : '/profile',
       failureRedirect : '/signup',
       failureFlash : true
-  }));
-
-  app.get('/username', isLoggedIn, function(req, res){
-    res.render('username', {
-      message: req.flash('usernameMessage')
-    });
-  });
-
-  app.post('/username', passport.authenticate('username-creation', {
-    successRedirect: '/profile',
-    failureRedirect: '/username',
-    failureFlash: true
   }));
 
   app.get('/profile', isLoggedIn, function(req, res) {
