@@ -6,6 +6,10 @@ module.exports = function(sequelize, Sequelize) {
       primaryKey: true,
       allowNull: false
     },
+    galaxy_id: {
+      type: Sequelize.INTEGER.UNSIGNED,
+      allowNull: false
+    },
     x: {
       type: Sequelize.SMALLINT,
       allowNull: false
@@ -16,13 +20,14 @@ module.exports = function(sequelize, Sequelize) {
     }
   }, {
     charset: 'utf8',
-    collate: 'utf8_unicode_ci'
+    collate: 'utf8_unicode_ci',
+    underscored: true
   });
 
   System.associate = (models) => {
     System.hasMany(models.Planet, {
       foreignKey: {
-        name: "system_id",
+        name: 'system_id',
         allowNull: false
       }
     });

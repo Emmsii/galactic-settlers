@@ -9,12 +9,26 @@ module.exports = function(sequelize, Sequelize) {
     max_players: {
       type: Sequelize.SMALLINT.UNSIGNED,
       allowNull: false
+    },
+    active: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   }, {
     charset: 'utf8',
     collate: 'utf8_unicode_ci',
-    underscores: true
+    underscored: true
   });
+
+  Galaxy.associate = (models) => {
+    Galaxy.hasMany(models.System, {
+      foreignKey: {
+        name: "galaxy_id",
+        allowNull: false
+      }
+    });
+  };
 
   return Galaxy;
 }

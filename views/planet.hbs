@@ -1,0 +1,46 @@
+<h3>Planet {{planet.id}}</h3>
+<h4>Buildings</h4>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th>UID</th>
+      <th>Name</th>
+      <th>Level</th>
+      <th>Metals</th>
+      <th>Dark Matter</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each buildings}}
+      <tr>
+        <th scope="row">{{id}}</th>
+        <td>{{uid}} </td>
+        <td>{{name}}</td>
+        <td>Level {{level}}</td>
+        <td>{{costs.metals}}</td>
+        <td>{{costs.dark_matter}}</td>
+        <td>
+          {{#ifCond level '>' 0}}
+            {{#if canBuild}}
+              <button id="id-{{uid}}" class="btn btn-primary btn-sm" onclick="requestUpgrade({{uid}})">Upgrade</button>
+            {{else}}
+              <button class="btn btn-secondary btn-sm" disabled>Upgrade</button>
+            {{/if}}
+            {{else}}
+              {{#if canBuild}}
+                <button id="id-{{id}}" class="btn btn-primary btn-sm" onclick="requestBuild({{id}}, {{planet_id}})">Build</button>
+              {{else}}
+                <button class="btn btn-secondary btn-sm" disabled>Build</button>
+              {{/if}}
+          {{/ifCond}}
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+{{#section 'script'}}
+  <script type="application/javascript" src="../scripts/planet.js"></script>
+{{/section}}

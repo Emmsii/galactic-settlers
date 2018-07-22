@@ -8,7 +8,7 @@ module.exports = function(sequelize, Sequelize) {
     },
     username: {
       type: Sequelize.STRING(24),
-      allowNull: true
+      allowNull: false
     },
     email: {
       type: Sequelize.STRING(100),
@@ -21,14 +21,19 @@ module.exports = function(sequelize, Sequelize) {
       type: Sequelize.STRING(100),
       allowNull: false,
     },
-    salt: {
-      type: Sequelize.STRING(255),
-      allowNull: false,
-    }
+    current_galaxy: {
+      type: Sequelize.INTEGER.UNSIGNED,
+      allowNull: true,
+      defaultValue: null
+    },
+    home_system: {
+      type: Sequelize.INTEGER.UNSIGNED,
+      allowNull: true
+    },
   }, {
     charset: 'utf8',
     collate: 'utf8_unicode_ci',
-    underscores: true
+    underscored: true
   });
 
   User.associate = (models) => {

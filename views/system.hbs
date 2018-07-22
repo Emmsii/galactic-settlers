@@ -1,0 +1,22 @@
+<h3>System @ {{system.x}}, {{system.y}}</h3>
+<h4>Planets</h4>
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th>Size</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each planets}}
+      <tr>
+        <th scope="row">{{id}}</th>
+        <td>{{size}}</td>
+        <td>
+          <a href="/planet/{{id}}" class="btn btn-primary btn-sm">Visit</button>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

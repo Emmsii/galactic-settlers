@@ -1,0 +1,31 @@
+<h3>Select a galaxy</h3>
+<form action="/galaxyselect" method="post">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Players</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each galaxies}}
+        <tr>
+          <th scope="row">Galaxy {{id}}</th>
+          <td>{{current_players}}/{{max_players}}</td>
+          <td>
+            {{#if active}}
+              {{#ifCond current_players '<' max_players}}
+                <button type="submit" class="btn btn-primary btn-sm" name="id" value="{{id}}">Join</button>
+              {{else}}
+                <button type="submit" class="btn btn-secondary btn-sm" disabled>Join</button>
+              {{/ifCond}}
+            {{else}}
+              <button type="submit" class="btn btn-secondary btn-sm" disabled>Join</button>
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</form>

@@ -5,11 +5,25 @@ module.exports = function(sequelize, Sequelize) {
       autoIncrement: true,
       primaryKey: true,
       allowNull: false
+    },
+    size: {
+      type: Sequelize.TINYINT.UNSIGNED,
+      allowNull: false
+    },
+    metals: {
+      type: Sequelize.INTEGER.UNSIGNED,
+      allowNull: false,
+      defaultValue: 0
+    },
+    dark_matter: {
+      type: Sequelize.INTEGER.UNSIGNED,
+      allowNull: false,
+      defaultValue: 0
     }
   }, {
     charset: 'utf8',
     collate: 'utf8_unicode_ci',
-    underscores: true
+    underscored: true
   });
 
   Planet.associate = (models) => {
