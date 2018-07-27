@@ -1,4 +1,18 @@
 <h3>Planet {{planet.id}}</h3>
+<h6>System @ x,y</h6>
+
+<ul class="nav justify-content-center">
+  <li class="nav-item resource">
+    <i class="fas fa-cogs"></i>
+    Metals: <span id="metals">{{planet.metals}}</span>
+  </li>
+  <li class="nav-item resource">
+    <i class="fas fa-magic"></i>
+    Dark Matter: <span id="dark-matter">{{planet.dark_matter}}</span>
+  </li>
+</ul>
+
+
 <h4>Buildings</h4>
 <table class="table table-sm">
   <thead>
@@ -9,7 +23,7 @@
       <th>Level</th>
       <th>Metals</th>
       <th>Dark Matter</th>
-      <th></th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -40,6 +54,10 @@
     {{/each}}
   </tbody>
 </table>
+
+{{#section 'style'}}
+  <link href="../css/planet.css" rel="stylesheet" />
+{{/section}}
 
 {{#section 'script'}}
   <script type="application/javascript" src="../scripts/planet.js"></script>

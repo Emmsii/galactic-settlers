@@ -1,38 +1,30 @@
 module.exports = function(sequelize, Sequelize) {
-  var System = sequelize.define('System', {
+  var BuildsProgress = sequelize.define('BuildsProgress', {
     id: {
       type: Sequelize.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
       allowNull: false
     },
-    galaxy_id: {
+    building_id: {
       type: Sequelize.INTEGER.UNSIGNED,
       allowNull: false
     },
-    x: {
-      type: Sequelize.SMALLINT,
+    started_at: {
+      type: Sequelize.DATE,
       allowNull: false
     },
-    y: {
-      type: Sequelize.SMALLINT,
+    time_required: {
+      type: Sequelize.INTEGER.UNSIGNED,
       allowNull: false
     }
   }, {
     charset: 'utf8',
     collate: 'utf8_unicode_ci',
-    underscored: true
+    underscored: true,
+    timestamps: false,
+    tableName: 'builds_progress'
   });
 
-  System.associate = (models) => {
-    System.hasMany(models.Planet, {
-      foreignKey: {
-        name: 'system_id',
-        allowNull: false,
-        onDelete: 'RESTRICT'
-      }
-    });
-  };
-
-  return System;
+  return BuildsProgress;
 }

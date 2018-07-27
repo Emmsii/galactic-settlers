@@ -30,7 +30,8 @@ module.exports = function(sequelize, Sequelize) {
     Planet.hasMany(models.Building, {
       foreignKey: {
         name: "planet_id",
-        allowNull: false
+        allowNull: false,
+        onDelete: 'RESTRICT'
       }
     });
   };

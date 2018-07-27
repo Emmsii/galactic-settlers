@@ -20,6 +20,11 @@ module.exports = function(sequelize, Sequelize) {
     collate: 'utf8_unicode_ci',
     underscores: true
   });
+  Building.associate = (models) => {
+    Building.hasOne(models.BuildsProgress, {
+      foreignKey: "building_id"
+    });
+  }
 
   return Building;
 }

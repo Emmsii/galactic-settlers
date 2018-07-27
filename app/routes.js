@@ -42,45 +42,118 @@ module.exports = function(app, passport) {
       });
   });
 
-  app.post('/planet/:planet_id/build/:type_id', function(req, res) {
+  app.post('/planet/:planet_id/build/:type_id', isLoggedIn, function(req, res) {
 
+    // >> Steps to build a planet
+    // 1. (SELECT) Check if the building type already exists on planet
+    // a. If YES return message
+    // 2. (SELECT) Check if the building is already being built
+    // a. If YES return message
+    // 2. (SELECT) Check if the planet has enough resources to build the building
+    // a. If NO return message
+    // 3. (UPDATE) Remove n amount of resources from the planet
+    // 4. (INSERT) Add the building to the builds_in_progress table
+    // 5. Return the updated planet data
     var planetId = req.params.planet_id;
-    var typeId = req.params.type_id;
-
+    var buildingTypeId = req.params.type_id;
+    console.log('creating building...');
     Building.findAll({
-      where: {
-        planet_id: req.params.planet_id,
-        type_id: req.params.type_id
-      }
-    }).then((result) => {
-      if (result[0]) {
-        console.log('building already exists.');
-        console.log(result[0]);
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({
-          result: "failure",
-          message: "Building of that type already exists."
-        }));
-      } else {
-        console.log('new building...');
-        var newBuilding = {
-          type_id: typeId,
-          planet_id: planetId,
-          level: 1
-        };
+        where: {
+          planet_id: planetId
+        }
+      })
+      .then(buildingInst => {
 
-        Building.create(newBuilding)
-          .then((result) => {
-            console.log('done');
-            res.setHeader('Content-Type', 'application/json');
-            res.send(JSON.stringify({
-              result: "success",
-              message: "Building created.",
-              data: result
-            }));
+        if (buildingInst) {
+          console.log('building already exists');
+          sendJsonResultMessage(res, 'failure', 'Building already exists');
+          throw new Error('01');
+        }
+        console.log('building does not exist')
+        var buildingData = buildingInst.get();
+
+        BuildsProgress.findAll({
+            where: {
+              building_id: buildingData.id
+            }
+          })
+          .then(buildProgressInst => {
+            if (buildProgressInst) {
+              console.log('building already being built');
+              sendJsonResultMessage(res, 'failure', 'Building is already being built.');
+              throw new Error('02');
+            }
+            console.log('building is not already being built');
+            return buildingData;
           });
-      }
-    });
+      })
+      .then(buildingData => {
+        var build
+      })
+      .catch(() => {
+        // it's fine
+      });
+    // var planetId = req.params.planet_id;
+    // var typeId = req.params.type_id;
+    //
+    // Building.findAll({
+    //   where: {
+    //     planet_id: planetId,
+    //     type_id: typeId
+    //   }
+    // }).then((result) => {
+    //   if (result[0]) {
+    //     res.setHeader('Content-Type', 'application/json');
+    //     res.send(JSON.stringify({
+    //       result: "failure",
+    //       message: "Building of that type already exists."
+    //     }));
+    //   } else {
+    //
+    //     Planet.findById(planetId)
+    //       .then((planet) => {
+    //         if (canPlanetBuild(gameData.buildingTypes[typeId], planet)) {
+    //
+    //           var newDarkMatter = planet.dark_matter - gameData.buildingTypes[typeId].costs.dark_matter;
+    //           var newMetals = planet.metals - gameData.buildingTypes[typeId].costs.metals;
+    //
+    //           Planet.update({
+    //               dark_matter: newDarkMatter,
+    //               metals: newMetals
+    //             }, {
+    //               where: {
+    //                 id: planetId
+    //               }
+    //             })
+    //             .then((result) => {
+    //               var newBuilding = {
+    //                 type_id: typeId,
+    //                 planet_id: planetId,
+    //                 level: 1
+    //               };
+    //
+    //               // Building.create(newBuilding)
+    //               //   .then((result) => {
+    //               //     res.setHeader('Content-Type', 'application/json');
+    //               //     res.send(JSON.stringify({
+    //               //       result: "success",
+    //               //       message: "Building created.",
+    //               //       data: result
+    //               //     }));
+    //               //   });
+    //             });
+    //         } else {
+    //           res.setHeader('Content-Type', 'application/json');
+    //           res.send(JSON.stringify({
+    //             result: "failure",
+    //             message: "Not enough resources."
+    //           }));
+    //         }
+    //       });
+    //
+    //
+    //   }
+    // });
   });
 
   app.post('/planet/:planet_id/upgrade/:building_id', function(req, res) {
@@ -110,9 +183,6 @@ module.exports = function(app, passport) {
             planets: planets
           });
         });
-        // res.render('system', {
-        //   system: result
-        // });
       });
   });
 
@@ -177,6 +247,19 @@ module.exports = function(app, passport) {
     res.redirect('/');
   });
 };
+
+function sendJsonResultMessage(res, result, message, data) {
+
+  var jsonObject = {
+    result: result,
+    message: message
+  }
+
+  if (data) jsonObject.data = data;
+
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify(jsonObject));
+}
 
 function canPlanetBuild(type, planet) {
   console.log('---');

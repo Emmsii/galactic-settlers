@@ -8,6 +8,7 @@ var galaxyData = {
   max_players: 100,
   max_planets_per_system: 6,
   system_chance: 0.1,
+  system_spacing: 2,
   width: 100,
   height: 100
 };
@@ -24,14 +25,16 @@ function createGalaxy(data) {
 
       for (var y = -(data.height / 2); y < data.height / 2; y++) {
         for (var x = -(data.width / 2); x < data.width / 2; x++) {
-          if (Math.random() <= data.system_chance) {
-            var newSystem = {
-              galaxy_id: newGalaxy.id,
-              x: x,
-              y: y
-            };
+          if (x % data.system_spacing == 0 && y % data.system_spacing == 0) {
+            if (Math.random() <= data.system_chance) {
+              var newSystem = {
+                galaxy_id: newGalaxy.id,
+                x: x,
+                y: y
+              };
 
-            systems.push(newSystem);
+              systems.push(newSystem);
+            }
           }
         }
       }
@@ -62,7 +65,7 @@ function createGalaxy(data) {
 
               Galaxy.update({
                 active: true
-              },{
+              }, {
                 where: {
                   id: newGalaxy.id
                 }
@@ -81,8 +84,8 @@ function init() {
 
       var joinable = 0;
 
-      for(var i = 0; i < result.length; i++){
-        if(result[i].current_players < result[i].max_players){
+      for (var i = 0; i < result.length; i++) {
+        if (result[i].current_players < result[i].max_players) {
           joinable++;
         }
       }
@@ -90,9 +93,9 @@ function init() {
       console.log(joinable + ' joinable.')
 
       var required = config.min_joinable_galaxies - joinable;
-      if(required > 0){
+      if (required > 0) {
         console.log('Creating ' + required + ' new galaxies.');
-        for(var i = 0; i < required; i++){
+        for (var i = 0; i < required; i++) {
           createGalaxy(galaxyData);
         }
       }

@@ -25,7 +25,8 @@ module.exports = function(sequelize, Sequelize) {
     Galaxy.hasMany(models.System, {
       foreignKey: {
         name: "galaxy_id",
-        allowNull: false
+        allowNull: false,
+        onDelete: 'RESTRICT'
       }
     });
   };

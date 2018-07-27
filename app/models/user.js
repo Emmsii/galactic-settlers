@@ -40,7 +40,8 @@ module.exports = function(sequelize, Sequelize) {
     User.hasMany(models.System, {
       foreignKey: {
         name: 'user_id',
-        allowNull: true
+        allowNull: true,
+        onDelete: 'SET NULL'
       }
     });
   };
